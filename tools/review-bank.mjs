@@ -3,7 +3,7 @@
 //   node tools/review-bank.mjs --shared   also list every word that sits in two or more categories
 //   node tools/review-bank.mjs --days 60  also print the next 60 puzzles from today
 import { CATEGORIES, ERRATA } from '../site/js/bank/index.js';
-import { addDays, fits, bankAt, puzzle, ruleFits, todayKey } from '../site/js/daily.js';
+import { EPOCH, addDays, fits, bankAt, puzzle, ruleFits, todayKey } from '../site/js/daily.js';
 import { checkBank } from './bank-check.mjs';
 
 const args = process.argv.slice(2);
@@ -40,7 +40,7 @@ if (args.includes('--shared')) {
 const di = args.indexOf('--days');
 if (di >= 0) {
   const n = Number(args[di + 1]) || 30;
-  for (let d = todayKey(), i = 0; i < n; i++, d = addDays(d, 1)) {
+  for (let d = todayKey() < EPOCH ? EPOCH : todayKey(), i = 0; i < n; i++, d = addDays(d, 1)) {
     const p = puzzle(d), bank = bankAt(d);
     console.log(`\n${d} #${p.number} (${p.groups.length} groups, ${p.herrings} look-alike pairs)`);
     for (const g of p.groups) console.log(`  [${g.colour}] t${g.tier} ${g.name.padEnd(30)} ${g.words.join(', ')}`);

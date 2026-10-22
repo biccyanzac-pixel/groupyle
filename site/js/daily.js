@@ -13,7 +13,7 @@
 //     words, `also` list or rule (docs/bank.md).
 import { CATEGORIES, ERRATA } from './bank/index.js';
 
-export const EPOCH = '2026-10-19';  // puzzle #1: set to the launch day. Never change it once live: it renumbers and reshuffles every day.
+export const EPOCH = '2026-10-23';  // puzzle #1, the launch day. Never change it once live: it renumbers and reshuffles every day.
 export const MAX_MISTAKES = 4;
 export const GROUP_SIZE = 4;
 export const MIN_MS = 10_000;       // solving faster than this isn't a person reading 16 words
@@ -189,7 +189,7 @@ function eligible(set) {
   });
 }
 
-const LOOKBACK = 2;     // blocks of 7 days (from EPOCH) before a day's own block whose categories it avoids
+const LOOKBACK = 3;     // blocks of 7 days (from EPOCH) before a day's own block whose categories it avoids
 const LEVELS = 4;       // how many times the lookback is refined (see blockIds)
 const blockCache = new Map();
 /**

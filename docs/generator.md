@@ -33,10 +33,10 @@ can, because no word on the board fits two groups.
 3. **Red herrings.** While the day has fewer look-alike pairs than its minimum, one slot is swapped for a stand-in
    that shares a family with the others, again from as far round the queue as possible.
 4. **No recent repeats.** Days are grouped in blocks of seven from `EPOCH`. A day never uses a category that an
-   earlier day of its block used, nor one used in the two blocks before. Knowing exactly what the earlier blocks used
+   earlier day of its block used, nor one used in the three blocks before. Knowing exactly what the earlier blocks used
    would chain every day back to `EPOCH`, so the earlier blocks are looked at as a slightly simpler build saw them
-   (the same rule with one level less of looking back, four levels deep). The work stays bounded (about 100 ms the
-   first time in a browser, then cached), and in two years of days no category comes back within 17 days.
+   (the same rule with one level less of looking back, four levels deep). The work stays bounded (about 150 ms the
+   first time in a browser, then cached), and in two years of days no category comes back within 16 days.
 5. **Words.** For each group, the words that fit no other chosen group (not in its `words`, `also` or `rule`) are
    shuffled and four are shown. The board is shuffled.
 
