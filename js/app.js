@@ -78,6 +78,7 @@ function roomFinish(already) {
 
 function render() {
   const { day, late } = mode;
+  if (!hasPuzzle(day)) return renderSoon();
   const p = puzzle(day), n = p.groups.length;
   $('daynum').textContent = `Groupyle #${p.number}${late ? ` · ${day} (played later)` : ''}`;
   if (window.JGG) $('level').replaceChildren(JGG.levelChip(day));
@@ -94,6 +95,7 @@ function render() {
   } else {
     show('done', false);
     show('intro', true);
+    show('start-form', true);
     hideError('start-error');
     $('start-label').textContent = prog.startedAt ? 'Continue' : 'Start';
     const name = api.savedName();
@@ -103,6 +105,18 @@ function render() {
     else { $('playing-as').textContent = name ? `Playing as ${name}.` : ''; show('playing-as', !!name); }
   }
   renderBoard();
+}
+
+// Before puzzle #1: say when it starts. The countdown switches to it at midnight UTC.
+function renderSoon() {
+  g = null;
+  $('daynum').textContent = 'Groupyle';
+  $('level').textContent = 'Starts at midnight UTC';
+  $('intro-title').textContent = 'The first puzzle arrives at midnight';
+  $('how-board').textContent = '16 words hide 4 groups of 4. Pick four that belong together and submit.';
+  show('play', false); show('done', false); show('intro', true);
+  show('start-form', false);
+  show('lb', false);
 }
 
 function startGame() {
