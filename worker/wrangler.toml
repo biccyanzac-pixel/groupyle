@@ -1,0 +1,17 @@
+name = "groupyle-leaderboard"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Bake the puzzles into src/days.js first (see build-days.mjs).
+[build]
+command = "node build-days.mjs"
+
+# The shared word-games database (the free plan's last D1), also used by Lettrle. Groupyle's tables are all named groupyle_*.
+[[d1_databases]]
+binding = "DB"
+database_name = "words-leaderboard"
+database_id = "b9b83eb0-a2e6-457d-b502-3fce699c390f"
+
+# Browser origins allowed to call this API (comma-separated).
+[vars]
+ALLOWED_ORIGINS = "https://biccyanzac-pixel.github.io"

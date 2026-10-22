@@ -1,3 +1,4 @@
 node_modules/
 .wrangler/
 tools/results/
+worker/src/days.js
