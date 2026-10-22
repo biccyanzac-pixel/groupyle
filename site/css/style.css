@@ -1,0 +1,720 @@
+/* The house base (colours, font, page, masthead) comes from the jacob.gg kit, loaded first:
+   https://biccyanzac-pixel.github.io/jacob.gg/kit/jgg.css. This file only adds the game's own components. */
+
+/* No grey tap flash on phones: every control below has its own :active feedback instead. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- cards --- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+}
+
+
+.card-top {
+  display: flex;
+  flex-wrap: wrap; /* "Factle #12 · 2026-10-12 (played later)" and the countdown share 320 px */
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+#daynum {
+  color: var(--accent);
+}
+
+.challenge-label {
+  margin-bottom: 0.35rem;
+}
+
+.prompt {
+  margin: 0;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+
+
+/* --- form --- */
+
+.play {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  resize: vertical;
+  font-size: max(16px, 1em); /* 16px or more, so iOS doesn't zoom into the field */
+}
+
+input[type="text"]:focus-visible,
+textarea:focus-visible,
+.submit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+
+.submit {
+  padding: 0.85rem 1rem;
+  font: inherit;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: filter var(--jgg-t-hover, 150ms) ease, opacity var(--jgg-t-hover, 150ms) ease, transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .submit:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
+
+.submit:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-press, 120ms);
+}
+
+.submit:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+
+.spinner {
+  display: none;
+  width: 0.95em;
+  height: 0.95em;
+  margin-left: 0.55em;
+  vertical-align: -0.12em;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+}
+
+.submit.busy .spinner {
+  display: inline-block;
+}
+
+.fineprint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.error {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.88rem;
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent);
+  border-radius: 10px;
+  overflow-wrap: anywhere; /* server messages can carry long URLs */
+}
+
+.score {
+  margin: 0.15rem 0 0;
+  font-size: clamp(3.75rem, 18vw, 5.5rem);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  /* The score counts up once a frame: keep that relayout inside this box (one line, line-height 1 = 1em tall). */
+  height: 1em;
+  contain: size layout;
+}
+
+.score.good {
+  color: var(--good);
+}
+
+.score.bad {
+  color: var(--bad);
+}
+
+
+
+/* --- leaderboard --- */
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(1.75rem, max-content) minmax(0, 1fr) auto; /* ranks of 1000+ */
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.65rem;
+  border-radius: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.row.me {
+  background: var(--accent-soft);
+  border-top-color: transparent;
+}
+
+.row-rank {
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.row.me .row-rank {
+  color: var(--accent);
+}
+
+.row-main {
+  min-width: 0;
+}
+
+.row-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+
+
+
+
+.row-score {
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-gap {
+  text-align: center;
+  color: var(--muted);
+  padding: 0.25rem 0;
+  letter-spacing: 0.3em;
+}
+
+.board-empty {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* --- footer --- */
+
+.footer {
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.board-note {
+  margin: 0.9rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* Belt-and-braces: guarantee [hidden] always wins regardless of any later
+   rule's specificity tie in the cascade (observed: the native UA default for
+   [hidden] can lose a same-specificity tie-break against an author class
+   selector that comes later in the stylesheet). */
+[hidden] {
+  display: none !important;
+}
+
+/* --- intro, done --- */
+
+.intro-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+
+.playing-as {
+  margin: 0;
+  overflow-wrap: anywhere; /* names shared from other games aren't cut to 20 */
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.attempts {
+  margin-top: 1.5rem;
+}
+
+#daily-score-caption {
+  margin-top: 0;
+}
+
+.attempt-list {
+  list-style: none;
+  margin: 1.3rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.attempt-row {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.attempt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.attempt-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.attempt-score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.attempt-score.good {
+  color: var(--good);
+}
+
+.attempt-score.bad {
+  color: var(--bad);
+}
+.attempts-done {
+  margin: 1.1rem 0 0;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* --- archive (replay a past day) ----------------------------------------- */
+
+.archive-note {
+  margin: 0.5rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.archive-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.archive-browse {
+  background: var(--accent);
+  color: #fff; /* same as .submit: #111 on the accent was hard to read in light mode */
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+.archive-browse:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: var(--jgg-t-press, 120ms);
+}
+
+.archive-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.archive-list-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .archive-list-item:hover {
+    border-color: var(--accent);
+  }
+}
+
+.archive-list-item:active {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); /* the row's own background is --surface-2 */
+}
+
+.archive-list-day {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.archive-list-prompt {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.archive-list-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* --- groupyle --------------------------------------------------------------------------------------- */
+
+a { color: var(--accent); }
+
+/* Group colours, easiest first (Sunday adds orange). Pastels with dark ink read the same in light and dark. */
+:root {
+  --grp-y: #e9cf6a;
+  --grp-g: #8fcf86;
+  --grp-o: #f0ab6b;
+  --grp-b: #93b8ec;
+  --grp-p: #c0a0ec;
+  --grp-ink: #14161d;
+}
+
+.play-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.mistakes {
+  flex: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.dots { display: inline-flex; gap: 0.3rem; }
+
+.dots i {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--text);
+  transition: background-color var(--jgg-t-hover, 150ms) ease, opacity var(--jgg-t-hover, 150ms) ease;
+}
+
+.dots i.used { background: var(--border); }
+
+/* Found groups sit above the board, in the order they were found. */
+.found {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.found:not(:empty) { margin-bottom: 0.4rem; }
+
+.group {
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  color: var(--grp-ink);
+  text-align: center;
+  background: var(--grp-y);
+}
+
+.group[data-c="g"] { background: var(--grp-g); }
+.group[data-c="o"] { background: var(--grp-o); }
+.group[data-c="b"] { background: var(--grp-b); }
+.group[data-c="p"] { background: var(--grp-p); }
+
+.group-name {
+  margin: 0;
+  font-weight: 750;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.group-words {
+  margin: 0.1rem 0 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.group.missed { opacity: 0.8; }
+
+/* The board: four columns at every width, so a 10-letter word has to fit a quarter of a 320 px card. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.tile {
+  min-width: 0;
+  height: clamp(3.6rem, 15vw, 4.6rem);
+  padding: 0 0.15rem;
+  font: inherit;
+  font-weight: 750;
+  font-size: clamp(0.82rem, 3.6vw, 1rem);
+  letter-spacing: 0.01em;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background-color var(--jgg-t-hover, 150ms) ease, color var(--jgg-t-hover, 150ms) ease,
+    border-color var(--jgg-t-hover, 150ms) ease, transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+/* Long words get smaller type rather than an ellipsis: the whole word is the clue. */
+.tile[data-len="8"] { font-size: clamp(0.7rem, 3.1vw, 0.92rem); }
+.tile[data-len="9"] { font-size: clamp(0.64rem, 2.8vw, 0.86rem); letter-spacing: 0; }
+.tile[data-len="10"] { font-size: clamp(0.58rem, 2.55vw, 0.8rem); letter-spacing: -0.01em; }
+
+.tile[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--text);
+  border-color: var(--text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover:not(:disabled):not([aria-pressed="true"]) { border-color: var(--muted); }
+}
+
+.tile:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-hover, 150ms), var(--jgg-t-press, 120ms);
+}
+
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tile:disabled { cursor: default; }
+
+.message {
+  min-height: 1.35rem;
+  margin: 0.7rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.message.warn { color: var(--warn); }
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.ghost {
+  padding: 0.85rem 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: opacity var(--jgg-t-hover, 150ms) ease, transform 80ms var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+.ghost:active:not(:disabled) { transform: scale(0.97); transition-duration: var(--jgg-t-hover, 150ms), var(--jgg-t-press, 120ms); }
+.ghost:disabled, .controls .submit:disabled { opacity: 0.45; cursor: default; }
+.ghost:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* The done screen's emoji grid: one row per guess. */
+.guess-grid {
+  display: inline-grid;
+  gap: 3px;
+  margin-top: 0.9rem;
+}
+
+.guess-grid span { display: flex; gap: 3px; }
+
+.guess-grid i {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 3px;
+  background: var(--grp-y);
+}
+
+.guess-grid i[data-c="g"] { background: var(--grp-g); }
+.guess-grid i[data-c="o"] { background: var(--grp-o); }
+.guess-grid i[data-c="b"] { background: var(--grp-b); }
+.guess-grid i[data-c="p"] { background: var(--grp-p); }
+
+.done-groups { margin-top: 1rem; }
+
+.how {
+  margin: 0.9rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.how li + li { margin-top: 0.2rem; }
+
+.share { width: 100%; margin-top: 1.1rem; }
+.out-of { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.9rem; }
+.row-sub { font-size: 0.8rem; color: var(--muted); }
+.row-sub .dots i { width: 0.5rem; height: 0.5rem; }
+.footer p + p { margin-top: 0.35rem; }
+.footer a { color: var(--muted); }
+#start { width: 100%; }
+
+/* --- motion (docs/motion-system.md in jacob.gg). Same values as the kit's .jgg-reveal / .jgg-enter, kept here with
+   fallbacks because the kit loads with defer and may be missing. Transform and opacity only. Tile taps and guesses
+   get press feedback and nothing else: they happen dozens of times a game. --- */
+
+@keyframes g-enter { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
+@keyframes g-reveal { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
+@keyframes g-fade { from { opacity: 0; } }
+
+/* A found group is an answer being revealed (a few times a game). The end-of-game rows only right after the end. */
+.group.is-new,
+.attempt-row.is-new {
+  animation: g-reveal var(--jgg-t-reveal, 320ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) backwards;
+  animation-delay: calc(min(var(--jgg-i, 0), 6) * var(--jgg-stagger, 50ms));
+}
+
+.archive-list {
+  animation: g-enter var(--jgg-t-enter, 220ms) var(--jgg-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group.is-new,
+  .attempt-row.is-new,
+  .archive-list {
+    animation: g-fade var(--jgg-t-exit, 160ms) ease backwards;
+    animation-delay: 0s;
+  }
+  .submit:active:not(:disabled),
+  .archive-browse:active:not(:disabled),
+  .tile:active:not(:disabled),
+  .ghost:active:not(:disabled) {
+    transform: none;
+    opacity: 0.85;
+  }
+}
+
+/* Read by screen readers, not shown. */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.error .retry { margin-left: 0.6rem; padding: 0.3rem 0.75rem; font-size: 0.85rem; }
+#play-error, #done-error { margin-top: 0.75rem; }
+
+/* Phones: a little less card padding, so four tiles of 10-letter words fit across 360 px. */
+@media (max-width: 420px) {
+  .card { padding: 1.1rem; }
+  .board { gap: 0.3rem; }
+}
